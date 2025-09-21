@@ -1,104 +1,82 @@
-📄 OMR-AutoEval Dashboard
+project:
+  name: "OMR-AutoEval Dashboard"
+  description: >
+    A web-based OMR evaluation & scoring system with 
+    automated bubble detection, role-based access, and 
+    real-time analytics dashboard.
 
-OMR-AutoEval ek web-based OMR evaluation dashboard hai jisme AI-assisted features, subject-wise analysis aur real-time reporting ka support hai. Ye platform educators aur institutions ke liye bana hai jo OMR sheet evaluation ko automate karna chahte hain.
+ascii_logo: |
+    ____  __  ___   ___       _        _            
+   / __ \/  |/  /  /   | ____(_)_____ ( )_____  ___ 
+  / / / / /|_/ /  / /| |/ ___/ / ___/ |// ___/ / _ \
+ / /_/ / /  / /  / ___ / /__/ (__  )   (__  ) /  __/
+/_____/_/  /_/  /_/  |_\___/_/____/  /____/  \___/ 
 
-🚀 Features
+features:
+  - Role-based login (Admin, Evaluator)
+  - Dashboard with key metrics (total sheets, avg score, subject analysis)
+  - Answer key upload (supports multiple sets)
+  - OMR sheet upload & automated evaluation
+  - Student-wise & subject-wise reporting
+  - Export results as CSV/Excel
+  - Modern TailwindCSS based UI
+  - Dark/Light theme support
 
-🔑 Role-based Login
+tech_stack:
+  frontend: 
+    - HTML5
+    - TailwindCSS
+    - JavaScript
+  backend: 
+    - Flask / FastAPI
+  database: 
+    - SQLite / PostgreSQL
+  charts: 
+    - Chart.js
+  utilities: 
+    - OpenCV
+    - NumPy
+    - Pillow
+    - Scikit-learn (optional)
 
-Admin (OMR Keys manage + Master Logs access)
+project_structure: |
+  OMR-AutoEval/
+  ├── index.html       # Main Application
+  ├── /assets          # Images, logo, static files
+  ├── /css             # Tailwind / Custom styles
+  ├── /js              # Charts & Scripts
+  └── README.yaml      # Documentation (this file)
 
-Evaluator (OMR upload + Evaluation results)
+run_locally:
+  clone: git clone https://github.com/username/omr-autoeval.git
+  navigate: cd omr-autoeval
+  launch:
+    mac: open index.html
+    linux: xdg-open index.html
+    windows: start index.html
 
-📊 Dashboard Insights
+demo_credentials:
+  admin:
+    email: "admin@autoeval.com"
+    password: "admin123"
+  evaluator:
+    email: "evaluator@autoeval.com"
+    password: "user123"
 
-Sheets Processed
+screenshots:
+  - login page
+  - dashboard overview
+  - omr upload modal
+  - evaluation report
 
-Average Scores
+future_enhancements:
+  - AI-powered bubble classification for ambiguous marks
+  - Multi-batch and historical analytics
+  - PDF report auto-generation
+  - Integration with ERP/LMS
+  - Mobile-first responsive design
 
-Valid / Failed Sheets
+  note: "Developed for Innomatics Hackathon 2025 (Theme 1 - CV)"
 
-Batch Performance Chart (Chart.js)
-
-📂 Answer Key Management
-
-Upload Excel (.xlsx / .xls / .csv) files with Set-A and Set-B keys
-
-Reset / Update keys anytime
-
-📝 OMR Upload & Evaluation
-
-Drag & Drop OMR sheet images
-
-Automated evaluation using uploaded keys
-
-Subject-wise score breakdown
-
-Batch AI Summary
-
-📑 Reports & Export
-
-Export results as CSV
-
-Student-wise score details
-
-AI-powered feedback generation
-
-🎨 UI/UX
-
-Modern responsive design (TailwindCSS)
-
-Dark/Light mode toggle
-
-Smooth animations + activity logs
-
-🛠️ Tech Stack
-
-Frontend: HTML5, CSS3, TailwindCSS, JavaScript (Vanilla)
-
-Charts & Visuals: Chart.js
-
-Icons: FontAwesome
-
-Fonts: Google Fonts (Inter)
-
-📂 Project Structure
-OMR-AutoEval/
-│── index.html         # Main entry point (login + app shell)
-│── /assets            # (Optional) Store static assets like images, logo
-│── README.md          # Project documentation
-
-⚙️ How to Run
-
-Clone the repo / code:
-
-git clone https://github.com/username/omr-autoeval.git
-cd omr-autoeval
-
-
-Browser me index.html file open karo:
-
-open index.html
-
-
-(Ya double-click karke directly browser me chalao)
-
-Login credentials (demo ke liye):
-
-Admin: admin@autoeval.com / admin123
-
-Evaluator: evaluator@autoeval.com / user123
-
-📷 Screenshots
-
-👉 Add screenshots of login page, dashboard, OMR upload, evaluation modal etc.
-
-🔮 Future Scope
-
-AI-based handwriting/OMR bubble recognition
-
-Multi-batch evaluation history with analytics
-
-PDF Report generation
-
-Integration with LMS/ERP systems
+license: "MIT"
+github_star: "⭐ If you like this project, give it a star on GitHub!"
