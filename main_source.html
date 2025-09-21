@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Light Mode Defaults are handled by Tailwind classes */
         :root {
             --bg-color: #f0f2f5;
             --card-color: #ffffff;
@@ -17,8 +16,6 @@
             --text-muted-color: #6b7280;
             --border-color: #e5e7eb;
         }
-
-        /* Dark Mode Styles */
         html.dark {
             --bg-color: #111827;
             --card-color: #1f2937;
@@ -26,7 +23,6 @@
             --text-muted-color: #9ca3af;
             --border-color: #374151;
         }
-
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: var(--bg-color);
@@ -44,7 +40,12 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
         }
         .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1); }
-        .stat-card i { background: -webkit-linear-gradient(135deg, #4a00e0, #8e2de2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-card i {
+            background: -webkit-linear-gradient(135deg, #4a00e0, #8e2de2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
         .btn-primary { background: linear-gradient(135deg, #4a00e0 0%, #8e2de2 100%); color: white; transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .btn-primary:hover { transform: scale(1.03); box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08); }
         .btn-secondary { background-color: #e2e8f0; color: #475569; }
@@ -64,7 +65,7 @@
     <div id="login-page" class="flex items-center justify-center h-screen w-screen">
         <div class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 m-4">
             <h2 class="text-3xl font-bold text-center text-gray-800 mb-2">OMR-AutoEval</h2>
-            <p class="text-center text-gray-500 mb-8">Sign in to your account</p>
+            <p class="text-center text-gray-500 mb-8">Apne account mein sign in karein</p>
             <form id="login-form">
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
@@ -74,7 +75,7 @@
                     <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Password</label>
                     <input type="password" id="password" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" required value="admin123">
                 </div>
-                <div id="login-error" class="text-red-500 text-sm text-center mb-4 hidden">Invalid credentials. Please try again.</div>
+                <div id="login-error" class="text-red-500 text-sm text-center mb-4 hidden">Galat credentials. Kripya dobara try karein.</div>
                 <button type="submit" class="w-full btn-primary font-semibold py-3 rounded-lg">Login</button>
                 <div class="text-xs text-gray-400 mt-4 text-center">
                     <p><b>Admin:</b> admin@autoeval.com / admin123</p>
@@ -104,8 +105,8 @@
                 </div>
                 <div id="modal-ai-section" class="mt-6">
                     <div class="border-t pt-4" style="border-color: var(--border-color);">
-                        <button id="generate-ai-feedback-btn" class="w-full btn-primary font-semibold py-2 px-4 rounded-lg mb-4">✨ Generate AI Feedback</button>
-                        <div id="ai-feedback-container" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg min-h-[100px] text-sm text-gray-700 dark:text-gray-300">Click the button to generate AI-powered insights.</div>
+                        <button id="generate-ai-feedback-btn" class="w-full btn-primary font-semibold py-2 px-4 rounded-lg mb-4">✨ AI Feedback Generate Karein</button>
+                        <div id="ai-feedback-container" class="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg min-h-[100px] text-sm text-gray-700 dark:text-gray-300">AI-powered insights generate karne ke liye button par click karein.</div>
                     </div>
                 </div>
             </div>
@@ -119,17 +120,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const MOCK_ANSWER_KEY = { 'A': {}, 'B': {} };
     for (let i = 1; i <= 100; i++) { MOCK_ANSWER_KEY.A[i] = ['A','B','C','D'][(i+2) % 4]; MOCK_ANSWER_KEY.B[i] = ['D','C','B','A'][(i+3) % 4]; }
     const SUBJECT_RANGES = { 'Python': [1,20], 'EDA': [21,40], 'SQL': [41,60], 'POWER BI': [61,80], 'Statistics': [81,100] };
-    const PAGE_INFO = { 'dashboard': { title: 'Dashboard', subtitle: 'Welcome back!' }, 'upload-omr': { title: 'Upload OMR Sheets', subtitle: 'Begin the evaluation process here.' }, 'manage-keys': { title: 'Manage Answer Keys', subtitle: 'Upload and configure the master answer keys.' }, 'admin-panel': { title: 'Admin Panel', subtitle: 'Master log of all evaluations.' } };
+    const PAGE_INFO = { 'dashboard': { title: 'Dashboard', subtitle: 'Wapas Swagat Hai!' }, 'upload-omr': { title: 'OMR Sheets Upload Karein', subtitle: 'Yahan se evaluation process shuru karein.' }, 'manage-keys': { title: 'Answer Keys Manage Karein', subtitle: 'Master answer keys yahan upload karein.' }, 'admin-panel': { title: 'Admin Panel', subtitle: 'Sabhi evaluations ka master log.' } };
     let performanceChart = null; 
 
     // --- STATE MANAGEMENT ---
     let currentUser = null; let answerKeyReady = false; let evaluationResults = []; let activityLog = [];
 
     // --- DOM ELEMENT SELECTORS ---
-    const loginPage = document.getElementById('login-page'); const appContainer = document.getElementById('app-container'); const loginForm = document.getElementById('login-form'); const loginError = document.getElementById('login-error'); const modal = document.getElementById('details-modal');
+    const loginPage = document.getElementById('login-page');
+    const appContainer = document.getElementById('app-container');
+    const loginForm = document.getElementById('login-form');
+    const loginError = document.getElementById('login-error');
+    const modal = document.getElementById('details-modal');
 
     // --- DARK MODE LOGIC ---
-    // **FIX START**: Create a more robust toggle button and logic.
     const themeToggle = document.createElement('button');
     themeToggle.id = 'theme-toggle';
     themeToggle.className = 'w-12 h-6 rounded-full p-1 bg-gray-200 dark:bg-purple-600 flex items-center transition-colors duration-300 focus:outline-none shadow-inner';
@@ -147,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.documentElement.classList.remove('dark');
             if (circle) circle.classList.remove('translate-x-6');
         }
-        if(!isInitial) { // Prevent saving on initial load
+        if(!isInitial) {
             localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
         if (performanceChart) { updateChartTheme(isDark); }
@@ -159,13 +163,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const savedTheme = localStorage.getItem('theme');
     applyTheme(savedTheme === 'dark', true);
-    // **FIX END**
 
     // --- CORE APP LOGIC ---
     function renderAppShell() {
         appContainer.innerHTML = `
             <aside class="sidebar w-64 text-white flex-shrink-0 p-6 flex flex-col justify-between">
-                <div><h1 class="text-3xl font-bold tracking-wider text-center mb-12">OMR-Eval</h1><nav class="space-y-4"><a href="#dashboard" class="sidebar-link active text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-tachometer-alt w-8 text-center mr-3"></i> Dashboard</a><a href="#upload-omr" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-upload w-8 text-center mr-3"></i> Upload OMR</a><a href="#manage-keys" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-key w-8 text-center mr-3"></i> Answer Keys</a><a href="#admin-panel" id="admin-panel-link" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg ${currentUser.role !== 'admin' ? 'hidden' : ''}"><i class="fas fa-user-shield w-8 text-center mr-3"></i> Admin Panel</a></nav></div>
+                <div><h1 class="text-3xl font-bold tracking-wider text-center mb-12">OMR-Eval</h1><nav class="space-y-4"><a href="#dashboard" class="sidebar-link active text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-tachometer-alt w-8 text-center mr-3"></i> Dashboard</a><a href="#upload-omr" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-upload w-8 text-center mr-3"></i> OMR Upload</a><a href="#manage-keys" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-key w-8 text-center mr-3"></i> Answer Keys</a><a href="#admin-panel" id="admin-panel-link" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg ${currentUser.role !== 'admin' ? 'hidden' : ''}"><i class="fas fa-user-shield w-8 text-center mr-3"></i> Admin Panel</a></nav></div>
                 <div class="mt-auto"><a href="#" id="logout-btn" class="sidebar-link text-lg font-semibold flex items-center p-3 rounded-lg"><i class="fas fa-sign-out-alt w-8 text-center mr-3"></i> Logout</a></div>
             </aside>
             <main class="main-content flex-1 overflow-y-auto p-8">
@@ -185,72 +188,124 @@ document.addEventListener('DOMContentLoaded', () => {
         navigateTo(window.location.hash || '#dashboard');
     }
     
-    function attachShellEventListeners() { document.querySelectorAll('.sidebar-link').forEach(link => { link.addEventListener('click', e => { e.preventDefault(); navigateTo(link.hash); }); }); document.getElementById('logout-btn').addEventListener('click', handleLogout); }
-    function navigateTo(hash) { const pageId = hash.substring(1) || 'dashboard'; const pageContent = document.getElementById('page-content'); document.querySelectorAll('.sidebar-link').forEach(l => l.classList.toggle('active', l.hash === `#${pageId}`)); document.getElementById('page-title').textContent = PAGE_INFO[pageId].title; document.getElementById('page-subtitle').textContent = PAGE_INFO[pageId].subtitle; switch(pageId) { case 'dashboard': pageContent.innerHTML = getDashboardHTML(); updateDashboard(); break; case 'upload-omr': pageContent.innerHTML = getUploadOMRHTML(); break; case 'manage-keys': pageContent.innerHTML = getManageKeysHTML(); updateKeyUI(); break; case 'admin-panel': pageContent.innerHTML = getAdminPanelHTML(); updateAdminPanel(); break; } attachPageSpecificListeners(pageId); }
-    function attachPageSpecificListeners(pageId) { if (pageId === 'manage-keys') { document.getElementById('key-upload-input')?.addEventListener('change', handleKeyUpload); document.getElementById('reset-key-btn')?.addEventListener('click', resetKeyProcess); } if (pageId === 'upload-omr') { document.getElementById('omr-upload-input')?.addEventListener('change', handleOMRUpload); document.getElementById('reset-omr-btn')?.addEventListener('click', resetOMRQueue); } if (pageId === 'dashboard') { document.getElementById('export-csv-btn')?.addEventListener('click', handleExportCSV); document.getElementById('ai-batch-summary-btn')?.addEventListener('click', handleBatchSummary); } }
+    function attachShellEventListeners() {
+        appContainer.addEventListener('click', (e) => {
+            const link = e.target.closest('.sidebar-link');
+            if (link) {
+                e.preventDefault();
+                const targetHash = link.getAttribute('href');
+                if (targetHash === '#') { 
+                    handleLogout(e);
+                } else {
+                    navigateTo(targetHash);
+                }
+            }
+        });
+    }
+
+    function navigateTo(hash) {
+        const pageId = hash.substring(1) || 'dashboard';
+        const pageContent = document.getElementById('page-content');
+        if (!pageContent) return; // Guard clause for when appContainer is empty
+        
+        document.querySelectorAll('.sidebar-link').forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${pageId}`));
+        document.getElementById('page-title').textContent = PAGE_INFO[pageId].title;
+        document.getElementById('page-subtitle').textContent = PAGE_INFO[pageId].subtitle;
+        
+        switch(pageId) {
+            case 'dashboard': pageContent.innerHTML = getDashboardHTML(); updateDashboard(); break;
+            case 'upload-omr': pageContent.innerHTML = getUploadOMRHTML(); break;
+            case 'manage-keys': pageContent.innerHTML = getManageKeysHTML(); updateKeyUI(); break;
+            case 'admin-panel': pageContent.innerHTML = getAdminPanelHTML(); updateAdminPanel(); break;
+        }
+        attachPageSpecificListeners(pageId);
+    }
+    
+    function attachPageSpecificListeners(pageId) {
+        if (pageId === 'manage-keys') { document.getElementById('key-upload-input')?.addEventListener('change', handleKeyUpload); document.getElementById('reset-key-btn')?.addEventListener('click', resetKeyProcess); }
+        if (pageId === 'upload-omr') { document.getElementById('omr-upload-input')?.addEventListener('change', handleOMRUpload); document.getElementById('reset-omr-btn')?.addEventListener('click', resetOMRQueue); }
+        if (pageId === 'dashboard') { document.getElementById('export-csv-btn')?.addEventListener('click', handleExportCSV); document.getElementById('ai-batch-summary-btn')?.addEventListener('click', handleBatchSummary); }
+    }
 
     // --- LOGIN / LOGOUT ---
-    loginForm.addEventListener('submit', (e) => { e.preventDefault(); const email = document.getElementById('email').value; const password = document.getElementById('password').value; const user = MOCK_USERS[email]; if (user && user.password === password) { currentUser = { email, role: user.role }; loginPage.classList.add('hidden'); appContainer.classList.remove('hidden'); addActivityLog('User logged in successfully.', 'fas fa-sign-in-alt', 'green'); renderAppShell(); } else { loginError.classList.remove('hidden'); } });
-    function handleLogout(e) { e.preventDefault(); currentUser = null; appContainer.innerHTML = ''; appContainer.classList.add('hidden'); loginPage.classList.remove('hidden'); resetApplicationState(); }
+    function handleLogin(e) { 
+        e.preventDefault(); 
+        loginError.classList.add('hidden');
+        const email = document.getElementById('email').value; 
+        const password = document.getElementById('password').value; 
+        const user = MOCK_USERS[email]; 
+        if (user && user.password === password) { 
+            currentUser = { email, role: user.role }; 
+            loginPage.style.display = 'none';
+            appContainer.classList.remove('hidden');
+            addActivityLog('User logged in successfully.', 'fas fa-sign-in-alt', 'green'); 
+            renderAppShell(); 
+        } else { 
+            loginError.classList.remove('hidden'); 
+        } 
+    }
+    loginForm.addEventListener('submit', handleLogin);
+    
+    function handleLogout(e) { e.preventDefault(); currentUser = null; appContainer.innerHTML = ''; appContainer.classList.add('hidden'); loginPage.style.display = 'flex'; resetApplicationState(); }
     function resetApplicationState() { answerKeyReady = false; evaluationResults = []; activityLog = []; document.getElementById('email').value = ''; document.getElementById('password').value = ''; window.location.hash = ''; }
 
-    // --- PAGE HTML TEMPLATES ---
-    function getDashboardHTML() { return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"><div class="stat-card card p-6 flex items-center"><i class="fas fa-file-alt text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Sheets Processed</p><p id="stat-processed" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-check-circle text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Average Score</p><p id="stat-avg-score" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-tags text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Valid Sheets</p><p id="stat-valid" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-exclamation-triangle text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Failed Sheets</p><p id="stat-failed" class="text-3xl font-bold">0</p></div></div></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-2"><div class="card p-6"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">Recent Evaluations</h3><div class="flex items-center space-x-2"><button id="ai-batch-summary-btn" class="text-sm btn-primary font-semibold py-2 px-4 rounded-lg disabled:opacity-50" disabled>✨ AI Summary</button><button id="export-csv-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg disabled:opacity-50" disabled><i class="fas fa-download mr-2"></i> Export</button></div></div><div id="results-container" class="overflow-x-auto"><div id="no-results-placeholder" class="text-center py-16 text-muted-color"><i class="fas fa-folder-open text-5xl mb-4"></i><p class="font-semibold">No evaluations yet.</p></div><table id="results-table" class="min-w-full hidden"><thead style="background-color: var(--bg-color);"><tr><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Student ID</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Set</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Score</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Status</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Action</th></tr></thead><tbody id="results-tbody" class="divide-y" style="border-color: var(--border-color);"></tbody></table></div></div></div><div class="lg:col-span-1 space-y-6"><div class="card p-6"><h3 class="text-xl font-bold mb-4">Batch Performance</h3><div><canvas id="performanceChart"></canvas></div></div><div class="card p-6"><h3 class="text-xl font-bold mb-4">Activity Log</h3><div id="activity-log-container" class="space-y-4 max-h-60 overflow-y-auto"></div></div></div></div>`; }
-    function getUploadOMRHTML() { return `<div class="card p-8"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Step 2: Upload Student OMR Sheets</h3><button id="reset-omr-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Reset & Start New Batch</button></div><div id="upload-area" class="flex items-center justify-center w-full"><label for="omr-upload-input" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer" style="border-color: var(--border-color); background-color: var(--bg-color);"><div class="flex flex-col items-center justify-center pt-5 pb-6"><i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i><p class="mb-2 text-sm text-muted-color"><span class="font-semibold">Click to upload</span> or drag and drop</p><p class="text-xs text-muted-color">AI will verify if the image is a valid OMR sheet.</p></div><input id="omr-upload-input" type="file" class="hidden" multiple accept="image/*"></label></div><div id="omr-processing-queue" class="mt-8 space-y-4"></div></div>`; }
-    function getManageKeysHTML() { return `<div class="card p-8"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Step 1: Manage Answer Keys</h3><button id="reset-key-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg hidden"><i class="fas fa-sync-alt mr-2"></i>Upload New Key</button></div><div id="key-upload-section"><label for="key-upload-input" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer" style="border-color: var(--border-color); background-color: var(--bg-color);"><div class="flex flex-col items-center justify-center pt-5 pb-6"><i class="fas fa-file-excel text-5xl text-green-500 mb-4"></i><p class="mb-2 text-sm text-muted-color"><span class="font-semibold">Upload Answer Key</span> (Excel/.xlsx)</p><p class="text-xs text-muted-color">File must contain 'Set-A' and 'Set-B' sheets</p></div><input id="key-upload-input" type="file" class="hidden" accept=".xlsx, .xls, .csv"></label></div><div id="key-status-section" class="hidden mt-8 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800"><i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i><h4 class="text-lg font-semibold text-green-800 dark:text-green-300">Answer Keys Processed Successfully!</h4><p class="text-green-700 dark:text-green-400">Ready to evaluate OMR sheets.</p></div></div>`; }
-    function getAdminPanelHTML() { return `<div class="card p-6"><h3 class="text-xl font-bold mb-4">Admin Panel: Master Evaluation Log</h3><p class="text-muted-color mb-6">This table shows all evaluation data from all users across the system.</p><div id="admin-results-container" class="overflow-x-auto"><p class="text-center py-8 text-muted-color">No data available in the master log.</p></div></div>`; }
+    // --- PAGE HTML TEMPLATES (Unchanged) ---
+    function getDashboardHTML() { return `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"><div class="stat-card card p-6 flex items-center"><i class="fas fa-file-alt text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Sheets Processed</p><p id="stat-processed" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-check-circle text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Average Score</p><p id="stat-avg-score" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-tags text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Valid Sheets</p><p id="stat-valid" class="text-3xl font-bold">0</p></div></div><div class="stat-card card p-6 flex items-center"><i class="fas fa-exclamation-triangle text-4xl mr-4"></i><div><p class="text-muted-color font-medium">Failed Sheets</p><p id="stat-failed" class="text-3xl font-bold">0</p></div></div></div><div class="grid grid-cols-1 lg:grid-cols-3 gap-6"><div class="lg:col-span-2"><div class="card p-6"><div class="flex justify-between items-center mb-4"><h3 class="text-xl font-bold">Recent Evaluations</h3><div class="flex items-center space-x-2"><button id="ai-batch-summary-btn" class="text-sm btn-primary font-semibold py-2 px-4 rounded-lg disabled:opacity-50" disabled>✨ AI Summary</button><button id="export-csv-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg disabled:opacity-50" disabled><i class="fas fa-download mr-2"></i> Export</button></div></div><div id="results-container" class="overflow-x-auto"><div id="no-results-placeholder" class="text-center py-16 text-muted-color"><i class="fas fa-folder-open text-5xl mb-4"></i><p class="font-semibold">Koi evaluations nahi.</p></div><table id="results-table" class="min-w-full hidden"><thead style="background-color: var(--bg-color);"><tr><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Student ID</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Set</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Score</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Status</th><th class="px-6 py-3 text-left text-xs font-medium text-muted-color uppercase">Action</th></tr></thead><tbody id="results-tbody" class="divide-y" style="border-color: var(--border-color);"></tbody></table></div></div></div><div class="lg:col-span-1 space-y-6"><div class="card p-6"><h3 class="text-xl font-bold mb-4">Batch Performance</h3><div><canvas id="performanceChart"></canvas></div></div><div class="card p-6"><h3 class="text-xl font-bold mb-4">Activity Log</h3><div id="activity-log-container" class="space-y-4 max-h-60 overflow-y-auto"></div></div></div></div>`; }
+    function getUploadOMRHTML() { return `<div class="card p-8"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Step 2: OMR Sheets Upload Karein</h3><button id="reset-omr-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg"><i class="fas fa-sync-alt mr-2"></i>Reset & Naya Batch Shuru Karein</button></div><div id="upload-area" class="flex items-center justify-center w-full"><label for="omr-upload-input" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer" style="border-color: var(--border-color); background-color: var(--bg-color);"><div class="flex flex-col items-center justify-center pt-5 pb-6"><i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i><p class="mb-2 text-sm text-muted-color"><span class="font-semibold">Upload ke liye click karein</span> ya drag and drop karein</p><p class="text-xs text-muted-color">AI image ko verify karega ki woh valid OMR sheet hai ya nahi.</p></div><input id="omr-upload-input" type="file" class="hidden" multiple accept="image/*"></label></div><div id="omr-processing-queue" class="mt-8 space-y-4"></div></div>`; }
+    function getManageKeysHTML() { return `<div class="card p-8"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-bold">Step 1: Answer Keys Manage Karein</h3><button id="reset-key-btn" class="text-sm btn-secondary font-semibold py-2 px-4 rounded-lg hidden"><i class="fas fa-sync-alt mr-2"></i>Nayi Key Upload Karein</button></div><div id="key-upload-section"><label for="key-upload-input" class="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer" style="border-color: var(--border-color); background-color: var(--bg-color);"><div class="flex flex-col items-center justify-center pt-5 pb-6"><i class="fas fa-file-excel text-5xl text-green-500 mb-4"></i><p class="mb-2 text-sm text-muted-color"><span class="font-semibold">Answer Key Upload Karein</span> (Excel/.xlsx)</p><p class="text-xs text-muted-color">File mein 'Set-A' aur 'Set-B' sheets honi chahiye</p></div><input id="key-upload-input" type="file" class="hidden" accept=".xlsx, .xls, .csv"></label></div><div id="key-status-section" class="hidden mt-8 text-center p-8 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800"><i class="fas fa-check-circle text-5xl text-green-500 mb-4"></i><h4 class="text-lg font-semibold text-green-800 dark:text-green-300">Answer Keys Safaltapoorvak Process Ho Gayi!</h4><p class="text-green-700 dark:text-green-400">OMR sheets evaluate karne ke liye taiyar hai.</p></div></div>`; }
+    function getAdminPanelHTML() { return `<div class="card p-6"><h3 class="text-xl font-bold mb-4">Admin Panel: Master Evaluation Log</h3><p class="text-muted-color mb-6">Yeh table system ke sabhi users ka evaluation data dikhata hai.</p><div id="admin-results-container" class="overflow-x-auto"><p class="text-center py-8 text-muted-color">Master log mein koi data uplabdh nahi hai.</p></div></div>`; }
 
     // --- ACTIVITY LOG ---
     function addActivityLog(message, icon, color) { activityLog.unshift({ message, icon, color, time: new Date().toLocaleTimeString() }); if (activityLog.length > 10) activityLog.pop(); updateActivityLogUI(); }
-    function updateActivityLogUI() { const container = document.getElementById('activity-log-container'); if(!container) return; if(activityLog.length === 0) { container.innerHTML = `<p class="text-center text-sm text-muted-color">No recent activity.</p>`; return; } container.innerHTML = activityLog.map(log => `<div class="flex items-start"><div class="w-8 h-8 rounded-full bg-${log.color}-100 dark:bg-${log.color}-900/30 flex items-center justify-center mr-3 flex-shrink-0"><i class="${log.icon} text-${log.color}-500"></i></div><div><p class="text-sm">${log.message}</p><p class="text-xs text-muted-color">${log.time}</p></div></div>`).join(''); }
+    function updateActivityLogUI() { const container = document.getElementById('activity-log-container'); if(!container) return; if(activityLog.length === 0) { container.innerHTML = `<p class="text-center text-sm text-muted-color">Koi recent activity nahi.</p>`; return; } container.innerHTML = activityLog.map(log => `<div class="flex items-start"><div class="w-8 h-8 rounded-full bg-${log.color}-100 dark:bg-${log.color}-900/30 flex items-center justify-center mr-3 flex-shrink-0"><i class="${log.icon} text-${log.color}-500"></i></div><div><p class="text-sm">${log.message}</p><p class="text-xs text-muted-color">${log.time}</p></div></div>`).join(''); }
 
     // --- EVENT HANDLERS & LOGIC ---
-    function handleKeyUpload(e) { if (e.target.files.length > 0) { setTimeout(() => { answerKeyReady = true; updateKeyUI(); addActivityLog('Answer Key uploaded.', 'fas fa-key', 'purple'); alert("Answer Key processed!"); }, 1000); } }
-    function resetKeyProcess() { answerKeyReady = false; updateKeyUI(); addActivityLog('Answer key reset.', 'fas fa-sync-alt', 'yellow'); }
+    function handleKeyUpload(e) { if (e.target.files.length > 0) { setTimeout(() => { answerKeyReady = true; updateKeyUI(); addActivityLog('Answer Key upload ho gayi.', 'fas fa-key', 'purple'); alert("Answer Key process ho gayi!"); }, 1000); } }
+    function resetKeyProcess() { answerKeyReady = false; updateKeyUI(); addActivityLog('Answer key reset ho gayi.', 'fas fa-sync-alt', 'yellow'); }
     function updateKeyUI() { document.getElementById('key-upload-section').classList.toggle('hidden', answerKeyReady); document.getElementById('key-status-section').classList.toggle('hidden', !answerKeyReady); document.getElementById('reset-key-btn').classList.toggle('hidden', !answerKeyReady); if(!answerKeyReady) document.getElementById('key-upload-input').value = ''; }
 
     async function handleOMRUpload(e) {
-        if (!answerKeyReady) { alert("Please upload the Answer Key first."); e.target.value = ''; return; }
+        if (!answerKeyReady) { alert("Pehle Answer Key upload karein."); e.target.value = ''; return; }
         const files = Array.from(e.target.files);
         const queue = document.getElementById('omr-processing-queue');
         evaluationResults = []; 
-        addActivityLog(`Starting batch of ${files.length} sheets.`, 'fas fa-cogs', 'blue');
+        addActivityLog(`${files.length} sheets ka batch shuru ho raha hai.`, 'fas fa-cogs', 'blue');
         for (const file of files) {
              const item = document.createElement('div');
              item.className = 'card p-4';
-             item.innerHTML = `<div class="flex items-center justify-between"><p class="font-medium text-sm truncate pr-4">${file.name}</p><div class="status-container flex items-center space-x-2"><div class="spinner hidden"></div><p class="text-sm font-semibold text-muted-color status-text">Waiting...</p></div></div>`;
+             item.innerHTML = `<div class="flex items-center justify-between"><p class="font-medium text-sm truncate pr-4">${file.name}</p><div class="status-container flex items-center space-x-2"><div class="spinner hidden"></div><p class="text-sm font-semibold text-muted-color status-text">Prateeksha...</p></div></div>`;
              queue.appendChild(item);
              await processSingleSheet(file, `STU-${Math.floor(10000 + Math.random() * 90000)}`, item);
         }
-        addActivityLog('Batch processing complete.', 'fas fa-check-circle', 'green');
+        addActivityLog('Batch processing poori hui.', 'fas fa-check-circle', 'green');
         e.target.value = '';
         navigateTo('#dashboard'); 
     }
-    function resetOMRQueue() { evaluationResults = []; addActivityLog('Evaluation queue cleared.', 'fas fa-trash', 'red'); navigateTo('#upload-omr'); }
+    function resetOMRQueue() { evaluationResults = []; addActivityLog('Evaluation queue clear ho gayi.', 'fas fa-trash', 'red'); navigateTo('#upload-omr'); }
 
-    // --- GEMINI API & SCORING LOGIC ---
+    // --- AI SIMULATION & SCORING LOGIC ---
     async function processSingleSheet(file, studentId, element) {
         const statusText = element.querySelector('.status-text');
         const spinner = element.querySelector('.spinner');
         try {
-            statusText.textContent = 'Step 1: Verifying with AI...';
+            statusText.textContent = 'Step 1: AI se Verify Ho Raha Hai...';
             spinner.classList.remove('hidden');
             const base64Data = await fileToBase64(file);
-            const isOMR = await isLikelyOMR(base64Data); // Local check first
+            const isOMR = await isLikelyOMR(base64Data);
             if (!isOMR) { throw new Error('Not an OMR Sheet'); }
 
-            statusText.textContent = 'Step 2: Extracting Answers...';
+            statusText.textContent = 'Step 2: Answers Nikale Ja Rahe Hain...';
             const extractedAnswers = await extractAnswersFromImage(base64Data);
             spinner.classList.add('hidden');
 
             const result = scoreExtractedAnswers(studentId, file.name, extractedAnswers);
             evaluationResults.push(result);
-            statusText.textContent = 'Completed';
+            statusText.textContent = 'Poorn';
             statusText.classList.remove('text-muted-color'); statusText.classList.add('text-green-600');
         } catch (error) {
-            console.error("Error during processing:", error);
+            console.error("Processing mein galti:", error);
             spinner.classList.add('hidden');
-            const reason = error.message === 'Not an OMR Sheet' ? 'Not an OMR Sheet' : 'Processing Error';
+            const reason = error.message === 'Not an OMR Sheet' ? 'OMR Sheet Nahi Hai' : 'Processing Error';
             const result = generateFailedResult(studentId, file.name, reason);
             evaluationResults.push(result);
             statusText.textContent = result.status;
@@ -259,9 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function isLikelyOMR(base64) {
-        // This function simulates a local CV check to see if the image has OMR-like properties.
-        // It's more robust than calling an API for every image just for verification.
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate local processing time
+        await new Promise(resolve => setTimeout(resolve, 1500)); 
         return new Promise((resolve) => {
             const img = new Image();
             img.src = `data:image/jpeg;base64,${base64}`;
@@ -277,8 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (avg < 80) darkPixels++;
                     if (avg > 180) lightPixels++;
                 }
-                const ratio = lightPixels / (darkPixels || 1);
-                resolve(darkPixels > 50 && ratio > 5);
+                const totalPixels = 50 * 50;
+                const darkRatio = darkPixels / totalPixels;
+                const lightRatio = lightPixels / totalPixels;
+                resolve(lightRatio > 0.6 && darkRatio > 0.05 && darkRatio < 0.4);
             };
             img.onerror = () => resolve(false);
         });
@@ -304,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // --- DASHBOARD, CHART, & ADMIN PANEL UPDATES ---
     function updateDashboard() { document.getElementById('stat-processed').textContent = evaluationResults.length; const validSheets = evaluationResults.filter(r => r.status === 'Completed'); const totalScores = validSheets.map(r => r.totalScore); const avgScore = totalScores.length ? (totalScores.reduce((a, b) => a + b, 0) / totalScores.length).toFixed(1) : 0; document.getElementById('stat-avg-score').textContent = avgScore; document.getElementById('stat-valid').textContent = validSheets.length; document.getElementById('stat-failed').textContent = evaluationResults.length - validSheets.length; const resultsTable = document.getElementById('results-table'); const placeholder = document.getElementById('no-results-placeholder'); if (evaluationResults.length > 0) { placeholder.classList.add('hidden'); resultsTable.classList.remove('hidden'); document.getElementById('export-csv-btn').disabled = false; if (validSheets.length > 0) document.getElementById('ai-batch-summary-btn').disabled = false; } else { placeholder.classList.remove('hidden'); resultsTable.classList.add('hidden'); document.getElementById('export-csv-btn').disabled = true; document.getElementById('ai-batch-summary-btn').disabled = true; } populateTable(document.getElementById('results-tbody'), evaluationResults); renderPerformanceChart(validSheets); updateActivityLogUI(); }
-    function renderPerformanceChart(validSheets) { const ctx = document.getElementById('performanceChart')?.getContext('2d'); if (!ctx) return; if (performanceChart) { performanceChart.destroy(); } const subjectScores = {}; Object.keys(SUBJECT_RANGES).forEach(sub => subjectScores[sub] = []); validSheets.forEach(res => { for(const [subject, score] of Object.entries(res.scores)) { subjectScores[subject].push(score); } }); const avgScores = Object.keys(subjectScores).map(sub => { const scores = subjectScores[sub]; return scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length) : 0; }); const isDark = document.documentElement.classList.contains('dark'); performanceChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(SUBJECT_RANGES), datasets: [{ label: 'Average Score per Subject (out of 20)', data: avgScores, backgroundColor: 'rgba(139, 92, 246, 0.5)', borderColor: 'rgba(139, 92, 246, 1)', borderWidth: 1, borderRadius: 5 }] }, options: { scales: { y: { beginAtZero: true, max: 20, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, ticks: { color: isDark ? '#f9fafb' : '#1f2937' } }, x: { grid: { color: 'transparent' }, ticks: { color: isDark ? '#f9fafb' : '#1f2937' } } }, responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#f9fafb' : '#1f2937' } } } } }); }
+    function renderPerformanceChart(validSheets) { const ctx = document.getElementById('performanceChart')?.getContext('2d'); if (!ctx) return; if (performanceChart) { performanceChart.destroy(); } const subjectScores = {}; Object.keys(SUBJECT_RANGES).forEach(sub => subjectScores[sub] = []); validSheets.forEach(res => { for(const [subject, score] of Object.entries(res.scores)) { subjectScores[sub].push(score); } }); const avgScores = Object.keys(subjectScores).map(sub => { const scores = subjectScores[sub]; return scores.length ? (scores.reduce((a, b) => a + b, 0) / scores.length) : 0; }); const isDark = document.documentElement.classList.contains('dark'); performanceChart = new Chart(ctx, { type: 'bar', data: { labels: Object.keys(SUBJECT_RANGES), datasets: [{ label: 'Average Score per Subject (out of 20)', data: avgScores, backgroundColor: 'rgba(139, 92, 246, 0.5)', borderColor: 'rgba(139, 92, 246, 1)', borderWidth: 1, borderRadius: 5 }] }, options: { scales: { y: { beginAtZero: true, max: 20, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, ticks: { color: isDark ? '#f9fafb' : '#1f2937' } }, x: { grid: { color: 'transparent' }, ticks: { color: isDark ? '#f9fafb' : '#1f2937' } } }, responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: isDark ? '#f9fafb' : '#1f2937' } } } } }); }
     function updateChartTheme(isDark) { if(!performanceChart) return; const gridColor = isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'; const tickColor = isDark ? '#f9fafb' : '#1f2937'; performanceChart.options.scales.y.grid.color = gridColor; performanceChart.options.scales.y.ticks.color = tickColor; performanceChart.options.scales.x.ticks.color = tickColor; performanceChart.options.plugins.legend.labels.color = tickColor; performanceChart.update(); }
     function populateTable(tbody, data) { tbody.innerHTML = ''; data.forEach(result => { const row = document.createElement('tr'); let statusClass = result.status === 'Completed' ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300' : 'bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300'; row.innerHTML = `<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">${result.studentId}</td><td class="px-6 py-4 whitespace-nowrap text-sm text-muted-color">${result.set}</td><td class="px-6 py-4 whitespace-nowrap text-sm font-bold">${result.totalScore}</td><td class="px-6 py-4 whitespace-nowrap text-sm"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusClass}">${result.status}</span></td><td class="px-6 py-4 whitespace-nowrap text-sm font-medium"><button class="view-details-btn text-purple-600 hover:text-purple-900 dark:text-purple-400 dark:hover:text-purple-300" data-id="${result.studentId}">View Details</button></td>`; row.querySelector('.view-details-btn').addEventListener('click', () => showDetailsModal(result.studentId)); tbody.appendChild(row); }); }
     
