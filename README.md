@@ -27,7 +27,6 @@
 └── README.md # Documentation
 
 ---
-
 ## ⚙️ Run Locally
 # Clone repository
 git clone https://github.com/sumit814/omr-autoeval.git
